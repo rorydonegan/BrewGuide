@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="theme-color" content="#111111" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <title>BrewGuide</title>
+  <style>
+    :root{--bg:#f7f3ec;--card:#fffaf2;--ink:#1b1712;--muted:#756b5f;--line:#eadfce;--accent:#6f4e37;--accent2:#2c1f18;--ok:#247a4b;--shadow:0 18px 50px rgba(42,28,18,.12);}
+    @media (prefers-color-scheme: dark){:root{--bg:#11100e;--card:#1c1814;--ink:#f7efe4;--muted:#b8aa98;--line:#332b23;--accent:#d6a16f;--accent2:#f4d6b7;--shadow:none;}}
+    *{box-sizing:border-box} body{margin:0;background:var(--bg);color:var(--ink);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;min-height:100svh;padding:env(safe-area-inset-top) 14px env(safe-area-inset-bottom);} 
+    .app{max-width:520px;margin:0 auto;padding:18px 0 28px}.top{display:flex;justify-content:space-between;align-items:center;margin:8px 2px 20px}.brand{font-size:28px;font-weight:800;letter-spacing:-.04em}.pill{font-size:13px;color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:8px 11px;background:rgba(255,255,255,.35)}
+    .screen{display:none}.screen.active{display:block}.hero{background:linear-gradient(135deg,var(--card),rgba(255,255,255,.45));border:1px solid var(--line);box-shadow:var(--shadow);border-radius:30px;padding:22px;margin-bottom:18px}.eyebrow{text-transform:uppercase;letter-spacing:.12em;font-size:12px;color:var(--muted);font-weight:700}.h1{font-size:34px;line-height:1;margin:8px 0;font-weight:850;letter-spacing:-.05em}.sub{font-size:16px;color:var(--muted);line-height:1.35}
+    .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.method{appearance:none;border:1px solid var(--line);background:var(--card);border-radius:24px;padding:18px 14px;text-align:left;min-height:116px;color:var(--ink);box-shadow:0 8px 22px rgba(42,28,18,.06)}.method .emoji{font-size:28px}.method .name{display:block;font-size:18px;font-weight:800;margin-top:12px;letter-spacing:-.03em}.method .meta{display:block;color:var(--muted);font-size:13px;margin-top:4px;line-height:1.2}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:28px;padding:18px;margin-bottom:14px}.label{font-size:13px;color:var(--muted);font-weight:700;margin-bottom:8px}.amountrow{display:flex;gap:10px;align-items:center}.input{width:100%;font-size:44px;font-weight:850;letter-spacing:-.05em;border:0;background:transparent;color:var(--ink);outline:none}.unit{font-weight:800;color:var(--muted);font-size:18px}.seg{display:flex;background:rgba(127,93,61,.12);padding:4px;border-radius:18px;gap:4px}.seg button{flex:1;border:0;background:transparent;color:var(--muted);padding:11px 8px;border-radius:14px;font-weight:800}.seg button.on{background:var(--card);color:var(--ink);box-shadow:0 5px 16px rgba(0,0,0,.08)}
+    .btn{width:100%;border:0;border-radius:22px;background:var(--accent);color:white;font-size:18px;font-weight:850;padding:17px 18px;margin-top:8px}.btn.secondary{background:transparent;color:var(--ink);border:1px solid var(--line)}.back{border:0;background:transparent;color:var(--muted);font-weight:800;font-size:16px;padding:8px 0;margin-bottom:8px}.resultTitle{display:flex;align-items:center;gap:12px}.bigemoji{font-size:42px}.resultTitle h2{font-size:30px;margin:0;letter-spacing:-.05em}.stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:16px 0}.stat{background:rgba(127,93,61,.1);border:1px solid var(--line);border-radius:22px;padding:14px}.stat b{display:block;font-size:26px;letter-spacing:-.04em}.stat span{display:block;color:var(--muted);font-weight:700;font-size:12px;margin-top:2px}.grind{background:var(--accent2);color:var(--bg);border-radius:26px;padding:18px;margin:10px 0 14px}.grind span{display:block;opacity:.75;font-size:13px;font-weight:800}.grind b{font-size:38px;letter-spacing:-.05em}.steps{display:flex;flex-direction:column;gap:10px}.step{border:1px solid var(--line);border-radius:20px;padding:13px 14px;background:rgba(255,255,255,.25)}.step b{display:block}.step span{color:var(--muted);font-size:14px}.timer{font-size:58px;font-weight:900;text-align:center;letter-spacing:-.06em;margin:18px 0}.tiny{font-size:13px;color:var(--muted);line-height:1.35}.footer{margin-top:16px;text-align:center;color:var(--muted);font-size:12px}
+  </style>
+</head>
+<body>
+<div class="app">
+  <div class="top"><div class="brand">BrewGuide</div><div class="pill">Opus calibrated</div></div>
+  <section id="home" class="screen active">
+    <div class="hero"><div class="eyebrow">Morning workflow</div><div class="h1">Tap a brewer.<br>Get the recipe.</div><div class="sub">Built for your Sage Precision Brewer, Fellow Opus, Flair, V60, Clever, Chemex, AeroPress and OXO.</div></div>
+    <div class="grid" id="methods"></div>
+  </section>
+  <section id="calc" class="screen">
+    <button class="back" onclick="show('home')">‹ Brewers</button>
+    <div class="card"><div class="resultTitle"><div class="bigemoji" id="calcEmoji"></div><h2 id="calcName"></h2></div><p class="sub" id="calcHint"></p></div>
+    <div class="card"><div class="label">How much brewed coffee / liquid do you want?</div><div class="amountrow"><input id="amount" class="input" type="number" inputmode="decimal" value="350"><div class="unit">g/ml</div></div></div>
+    <div class="card"><div class="label">Roast adjustment</div><div class="seg"><button id="rLight" onclick="setRoast('light')">Light</button><button id="rMed" class="on" onclick="setRoast('medium')">Medium</button><button id="rDark" onclick="setRoast('dark')">Dark</button></div></div>
+    <button class="btn" onclick="calculate()">Calculate</button><button class="btn secondary" onclick="show('home')">Choose another brewer</button>
+  </section>
+  <section id="result" class="screen">
+    <button class="back" onclick="show('calc')">‹ Edit recipe</button>
+    <div class="card"><div class="resultTitle"><div class="bigemoji" id="resEmoji"></div><h2 id="resName"></h2></div><div class="stats"><div class="stat"><b id="coffeeOut">—</b><span>Coffee</span></div><div class="stat"><b id="waterOut">—</b><span>Water</span></div></div><div class="grind"><span>Fellow Opus starting grind</span><b id="grindOut">—</b></div><p class="tiny" id="ratioOut"></p></div>
+    <div class="card"><div class="label">Brew steps</div><div class="steps" id="stepsOut"></div></div>
+    <button class="btn" onclick="startTimer()">▶ Brew timer</button><button class="btn secondary" onclick="saveFav()">Save as favourite</button>
+  </section>
+  <section id="timer" class="screen"><button class="back" onclick="show('result')">‹ Recipe</button><div class="card"><div class="eyebrow">Brew timer</div><div class="h1" id="timerMethod">Ready?</div><div class="timer" id="clock">00:00</div><button class="btn" id="timerBtn" onclick="toggleTimer()">Start</button><button class="btn secondary" onclick="resetTimer()">Reset</button><p class="tiny">Use this as a simple count-up timer while following the steps above.</p></div></section>
+  <div class="footer">Starting points only. Dial in by taste: sour → finer; bitter/dry → coarser.</div>
+</div>
+<script>
+const methods={
+  flair:{emoji:'☕',name:'Flair Neo Flex',hint:'Espresso on the Flair. Choose basket by grind note.',ratio:2.2,grind:'1.0 bottomless / 2.5 Flow-Control',steps:['Dose and distribute evenly.','Tamp level and preheat brew chamber.','Pull around 30–45 seconds.','Too fast: finer. Too slow: coarser.']},
+  v60:{emoji:'🌊',name:'V60',hint:'Clean pour-over. Best default for 250–500 g.',ratio:16.7,grind:5.3,steps:['Bloom with 3× coffee weight for 45 sec.','Pour steadily to 60% of total water.','Finish pour to target weight.','Aim for 2:45–3:30 drawdown.']},
+  clever:{emoji:'🫖',name:'Clever Dripper',hint:'Easy immersion-filter hybrid.',ratio:16,grind:6.0,steps:['Add water first, then coffee.','Steep covered for 2:30–3:00.','Stir gently, place on cup.','Drawdown should take about 1 minute.']},
+  chemex:{emoji:'⌛',name:'Chemex',hint:'Larger brews with thick filters.',ratio:16.7,grind:7.5,steps:['Bloom with 3× coffee weight for 45 sec.','Pour in slow pulses.','Keep bed from drying out.','Aim for 4:00–5:30 total.']},
+  aeropress:{emoji:'🚀',name:'AeroPress',hint:'Flexible immersion. This uses a balanced everyday recipe.',ratio:14,grind:5.0,steps:['Add coffee and water.','Stir or swirl gently.','Steep 1:30–2:00.','Press slowly for 20–30 sec.']},
+  sage:{emoji:'🤖',name:'Sage Precision Brewer',hint:'Batch brew. Grind adjusts slightly by batch size.',ratio:16.7,grind:6.8,steps:['Rinse filter and add grounds.','Use Gold/Auto mode as default.','For 500 ml use slightly finer.','For 1 L+ use slightly coarser.']},
+  oxo:{emoji:'❄️',name:'OXO Rapid Brewer',hint:'Cold/rapid brewer style: coarse and forgiving.',ratio:8,grind:9.5,steps:['Use coarse grind.','Wet grounds evenly.','Steep per OXO instructions.','Dilute concentrate to taste if needed.']}
+};
+let current='v60', roast='medium', last=null, sec=0, int=null;
+function show(id){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function render(){const box=document.getElementById('methods');box.innerHTML='';Object.entries(methods).forEach(([k,m])=>{box.innerHTML+=`<button class="method" onclick="choose('${k}')"><span class="emoji">${m.emoji}</span><span class="name">${m.name}</span><span class="meta">Opus ${m.grind}</span></button>`})}
+function choose(k){current=k;const m=methods[k];calcEmoji.textContent=m.emoji;calcName.textContent=m.name;calcHint.textContent=m.hint;show('calc')}
+function setRoast(r){roast=r;['Light','Med','Dark'].forEach(x=>document.getElementById('r'+x).classList.remove('on'));document.getElementById('r'+(r==='light'?'Light':r==='dark'?'Dark':'Med')).classList.add('on')}
+function adjGrind(g){if(typeof g==='string')return g;let a=roast==='light'?-0.2:roast==='dark'?0.3:0;return Math.max(1,Math.min(11,g+a)).toFixed(1)}
+function calculate(){const m=methods[current];const liquid=Number(amount.value||0);const coffee=liquid/m.ratio;let water=liquid;if(current==='flair'){water=coffee*2.2}else if(current==='oxo'){water=coffee*8}last={m,liquid,coffee,water,grind:adjGrind(m.grind)};resEmoji.textContent=m.emoji;resName.textContent=m.name;coffeeOut.textContent=coffee.toFixed(1)+' g';waterOut.textContent=water.toFixed(0)+' g';grindOut.textContent=last.grind;ratioOut.textContent=`Ratio 1:${m.ratio}. ${roast} roast adjustment applied where useful.`;stepsOut.innerHTML=m.steps.map((s,i)=>`<div class="step"><b>${i+1}. ${s}</b><span>${i===0?'Start here, then move down the list.':''}</span></div>`).join('');localStorage.setItem('brewguide-last',JSON.stringify({current,roast,amount:amount.value,last}));show('result')}
+function saveFav(){localStorage.setItem('brewguide-favourite',JSON.stringify(last));alert('Saved on this phone.');}
+function startTimer(){timerMethod.textContent=methods[current].name;show('timer')}
+function fmt(s){return String(Math.floor(s/60)).padStart(2,'0')+':'+String(s%60).padStart(2,'0')}
+function toggleTimer(){if(int){clearInterval(int);int=null;timerBtn.textContent='Start'}else{int=setInterval(()=>{sec++;clock.textContent=fmt(sec)},1000);timerBtn.textContent='Pause'}}
+function resetTimer(){clearInterval(int);int=null;sec=0;clock.textContent='00:00';timerBtn.textContent='Start'}
+window.addEventListener('load',()=>{render();const saved=JSON.parse(localStorage.getItem('brewguide-last')||'null');if(saved){current=saved.current;roast=saved.roast;amount.value=saved.amount;setRoast(roast)}});
+if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js').catch(()=>{})}
+</script>
+</body>
+</html>
