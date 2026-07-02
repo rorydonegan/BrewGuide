@@ -1,20 +1,216 @@
+:root {
+  --bg: #100d18;
+  --card: #f7efe8;
+  --text: #fffaf4;
+  --ink: #171225;
+  --muted: #8f8798;
+  --accent: #a987ff;
+  --soft: rgba(255,255,255,.08);
+}
+
+* { box-sizing: border-box; }
+
 body {
-  background: #100d18;
-  color: white;
+  margin: 0;
+  background: radial-gradient(circle at top, #241b35, var(--bg) 45%);
+  color: var(--text);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-  padding: 24px;
+}
+
+.app {
+  max-width: 460px;
+  margin: 0 auto;
+  padding: 28px 22px 40px;
+}
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.eyebrow {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+h1 {
+  margin: 6px 0 0;
+  font-size: 34px;
+  line-height: 1;
+}
+
+.hero-card,
+.recipe-card,
+.grind-card,
+.brew-card {
+  background: var(--card);
+  color: var(--ink);
+  border-radius: 30px;
+  padding: 26px;
+  margin: 22px 0;
+  box-shadow: 0 18px 50px rgba(0,0,0,.28);
+}
+
+.hero-row,
+.stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.stat-label {
+  color: #77717c;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+}
+
+.stat-value {
+  font-size: 28px;
+  font-weight: 800;
+  margin-top: 6px;
+}
+
+.method-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-top: 14px;
+}
+
+.method-card {
+  background: var(--soft);
+  border: 1px solid rgba(255,255,255,.1);
+  color: white;
+  border-radius: 22px;
+  padding: 18px;
+  text-align: left;
+}
+
+.method-card strong {
+  display: block;
+  font-size: 18px;
 }
 
 button {
-  border-radius: 999px;
-  padding: 12px 18px;
-  border: 0;
+  font: inherit;
+  cursor: pointer;
 }
 
-.hero-card {
-  background: #f7efe5;
-  color: #171225;
-  border-radius: 28px;
-  padding: 24px;
-  margin: 20px 0;
+.primary {
+  background: var(--accent);
+  color: #160f25;
+  border: 0;
+  border-radius: 999px;
+  padding: 14px 20px;
+  font-weight: 800;
+}
+
+.ghost {
+  background: rgba(255,255,255,.08);
+  color: white;
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: 999px;
+  padding: 10px 16px;
+}
+
+.hero-card .primary {
+  margin-top: 18px;
+}
+
+.screen { display: none; }
+.screen.active { display: block; }
+
+.grind-card {
+  text-align: center;
+}
+
+.grind-title {
+  color: #6d6380;
+  font-weight: 800;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.grind-number {
+  font-size: 80px;
+  line-height: 1;
+  font-weight: 800;
+  margin: 16px 0;
+}
+
+.scale {
+  position: relative;
+  height: 52px;
+  margin: 18px 0 8px;
+  border-top: 2px solid #77717c;
+}
+
+.scale span {
+  position: absolute;
+  top: 10px;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: #5f5968;
+}
+
+.scale .dot {
+  position: absolute;
+  top: -11px;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--accent);
+  transform: translateX(-50%);
+  box-shadow: 0 0 0 8px rgba(169,135,255,.18);
+}
+
+.micro {
+  margin-top: 18px;
+  font-size: 18px;
+}
+
+.label-pill {
+  display: inline-block;
+  margin-top: 16px;
+  background: rgba(169,135,255,.14);
+  color: #5e3fb2;
+  padding: 10px 16px;
+  border-radius: 999px;
+  font-weight: 800;
+}
+
+.brew-card {
+  text-align: center;
+}
+
+.step-title {
+  font-size: 36px;
+  font-weight: 900;
+}
+
+.step-main {
+  font-size: 48px;
+  font-weight: 900;
+  margin: 18px 0 4px;
+}
+
+.step-sub {
+  color: #6f6878;
+  font-size: 18px;
+}
+
+.brew-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 22px;
+}
+
+.brew-actions button {
+  flex: 1;
 }
