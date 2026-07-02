@@ -1,19 +1,87 @@
-const methods={
- v60:{icon:'▽',name:'V60',water:340,ratio:16.5,grind:5.5,label:'Medium fine',target:'2:45–3:15',temp:'93°C',bloom:'60g · 45s',steps:[['Bloom','60g','45 seconds'],['Pour','to 200g','steady spiral'],['Pour','to 340g','slow centre pour'],['Drawdown','Wait','target 2:45–3:15']]},
- aeropress:{icon:'◎',name:'AeroPress',water:250,ratio:15,grind:5,label:'Medium fine',target:'1:30–2:30',temp:'90°C',bloom:'—',steps:[['Add water','250g','stir 10 seconds'],['Steep','1:30','cap and wait'],['Press','30s','slow steady pressure']]},
- clever:{icon:'◒',name:'Clever',water:320,ratio:16,grind:6,label:'Medium',target:'3:00–4:00',temp:'94°C',bloom:'—',steps:[['Add water','320g','then coffee'],['Steep','3:00','lid on'],['Drawdown','Release','onto mug/server']]},
- chemex:{icon:'◇',name:'Chemex',water:500,ratio:16.7,grind:7.5,label:'Medium coarse',target:'4:00–5:00',temp:'94°C',bloom:'75g · 45s',steps:[['Bloom','75g','45 seconds'],['Pour','to 300g','gentle circles'],['Pour','to 500g','keep bed level'],['Drawdown','Wait','target 4:00–5:00']]},
- sage:{icon:'▤',name:'Sage Precision',water:750,ratio:16.7,grind:6.75,label:'Medium',target:'Auto',temp:'Gold',bloom:'Auto',steps:[['Load brewer','750g','water in tank'],['Add coffee','45g','basket level'],['Start','Gold mode','let brewer run']]},
- flair:{icon:'◉',name:'Flair Neo Flex',water:36,ratio:2.5,grind:1,label:'Espresso fine',target:'30–45s',temp:'94°C',bloom:'Pre-infuse 5–10s',steps:[['Prep','14–16g','dose and tamp'],['Pre-infuse','5–10s','gentle pressure'],['Pull shot','36g out','30–45 seconds']]},
- oxo:{icon:'❄',name:'OXO Rapid Brewer',water:450,ratio:10,grind:9.5,label:'Coarse',target:'Cold brew',temp:'Cold',bloom:'—',steps:[['Add coffee','45g','coarse grind'],['Add water','450g','stir fully'],['Brew','Follow OXO','rapid cold brew cycle']]}
-};
-let current='v60',step=0;
-const $=id=>document.getElementById(id);
-function coffee(w,r){return (w/r).toFixed(1)+'g'}
-function q(v){return (Math.round(v*4)/4).toFixed(2)}
-function renderHome(){const grid=$('methodGrid');grid.innerHTML='';Object.entries(methods).forEach(([key,m])=>{const b=document.createElement('button');b.className='method-card';b.innerHTML=`<div class="icon">${m.icon}</div><strong>${m.name}</strong><span>${m.water}g · Opus ${q(m.grind)}</span>`;b.onclick=()=>showRecipe(key);grid.appendChild(b)})}
-function show(screen){document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));$(screen).classList.add('active')}
-function showRecipe(key){current=key;const m=methods[key];$('methodName').textContent=m.name;$('recipeType').textContent='Recipe ready';$('coffeeDose').textContent=coffee(m.water,m.ratio);$('waterDose').textContent=m.water+'g';$('ratio').textContent='1:'+m.ratio;$('grindValue').textContent=q(m.grind);$('grindLabel').textContent=m.label;$('targetTime').textContent=m.target;$('temp').textContent=m.temp;$('bloom').textContent=m.bloom;$('dialDot').style.left=((m.grind-1)/10*100)+'%';renderQuarters(m.grind);show('recipe')}
-function renderQuarters(v){const base=Math.floor(v), frac=Math.round((v-base)*4);$('quarterTicks').innerHTML='';[0,1,2,3].forEach(i=>{const el=document.createElement('i');if(i===frac)el.className='active';$('quarterTicks').appendChild(el)})}
-function renderStep(){const steps=methods[current].steps;const s=steps[step];$('brewMethod').textContent=methods[current].name;$('stepTitle').textContent=s[0];$('stepMain').textContent=s[1];$('stepSub').textContent=s[2];$('progressBar').style.width=((step+1)/steps.length*100)+'%';$('prevStep').disabled=step===0;$('nextStep').textContent=step===steps.length-1?'Finish':'Next'}
-$('backHome').onclick=()=>show('home');$('backRecipe').onclick=()=>show('recipe');$('startBrew').onclick=()=>{step=0;renderStep();show('brew')};$('nextStep').onclick=()=>{const steps=methods[current].steps;if(step<steps.length-1){step++;renderStep()}else show('home')};$('prevStep').onclick=()=>{if(step>0){step--;renderStep()}};$('themeToggle').onclick=()=>{document.documentElement.classList.toggle('light');localStorage.setItem('theme',document.documentElement.classList.contains('light')?'light':'dark')};document.querySelector('[data-method="v60"]').onclick=()=>showRecipe('v60');if(localStorage.theme==='light')document.documentElement.classList.add('light');renderHome();
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>BrewGuide</title>
+  <meta name="theme-color" content="#171225" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">BrewGuide 0.4</p>
+        <h1>Good morning ☕</h1>
+      </div>
+      <button id="themeToggle" class="ghost" aria-label="Toggle theme">◐</button>
+    </header>
+
+    <section id="home" class="screen active">
+      <article class="hero-card">
+        <p class="eyebrow">Favourite brew</p>
+        <div class="hero-row">
+          <div>
+            <h2>V60</h2>
+            <p>340g · Opus 5.50</p>
+          </div>
+          <button class="primary" data-method="v60">Brew</button>
+        </div>
+      </article>
+
+      <h3 class="section-title">Choose brewer</h3>
+      <div id="methodGrid" class="grid"></div>
+    </section>
+
+    <section id="recipe" class="screen">
+      <button class="back" id="backHome">← Brewers</button>
+      <article class="recipe-card">
+        <p class="eyebrow" id="recipeType">Recipe ready</p>
+        <h2 id="methodName">V60</h2>
+        <div class="stats">
+          <div><span id="coffeeDose">20.6g</span><small>Coffee</small></div>
+          <div><span id="waterDose">340g</span><small>Water</small></div>
+          <div><span id="ratio">1:16.5</span><small>Ratio</small></div>
+        </div>
+      </article>
+
+      <article class="grind-card">
+        <p class="eyebrow">Fellow Opus</p>
+        <h2>Main Dial</h2>
+        <div class="grind-value" id="grindValue">5.50</div>
+        <div class="dial-wrap">
+          <div class="dial-track"><div id="dialDot" class="dial-dot"></div></div>
+          <div class="dial-labels"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span></div>
+        </div>
+        <div class="quarter" id="quarterTicks"></div>
+        <div class="micro-row"><span>Micro</span><strong id="microValue">0 (Centre)</strong></div>
+        <p class="grind-note" id="grindLabel">Medium fine</p>
+      </article>
+
+      <article class="details-card">
+        <div><span>Target</span><strong id="targetTime">2:45–3:15</strong></div>
+        <div><span>Temp</span><strong id="temp">93°C</strong></div>
+        <div><span>Bloom</span><strong id="bloom">60g · 45s</strong></div>
+      </article>
+
+      <button class="primary wide" id="startBrew">Start Guided Brew</button>
+    </section>
+
+    <section id="brew" class="screen brew-screen">
+      <button class="back" id="backRecipe">← Recipe</button>
+      <p class="eyebrow" id="brewMethod">V60</p>
+      <h2 id="stepTitle">Bloom</h2>
+      <div class="step-main" id="stepMain">60g</div>
+      <p class="step-sub" id="stepSub">45 seconds</p>
+      <div class="progress"><div id="progressBar"></div></div>
+      <div class="brew-actions">
+        <button class="ghost" id="prevStep">Back</button>
+        <button class="primary" id="nextStep">Next</button>
+      </div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
