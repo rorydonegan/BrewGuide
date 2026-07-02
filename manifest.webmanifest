@@ -1,1 +1,87 @@
-{"name":"BrewGuide","short_name":"BrewGuide","start_url":"./","display":"standalone","background_color":"#f7f3ec","theme_color":"#111111","icons":[{"src":"icons/icon-192.png","sizes":"192x192","type":"image/png"},{"src":"icons/icon-512.png","sizes":"512x512","type":"image/png"}]}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>BrewGuide</title>
+  <meta name="theme-color" content="#171225" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="apple-touch-icon" href="icons/icon-192.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="app">
+    <header class="topbar">
+      <div>
+        <p class="eyebrow">BrewGuide 0.4</p>
+        <h1>Good morning ☕</h1>
+      </div>
+      <button id="themeToggle" class="ghost" aria-label="Toggle theme">◐</button>
+    </header>
+
+    <section id="home" class="screen active">
+      <article class="hero-card">
+        <p class="eyebrow">Favourite brew</p>
+        <div class="hero-row">
+          <div>
+            <h2>V60</h2>
+            <p>340g · Opus 5.50</p>
+          </div>
+          <button class="primary" data-method="v60">Brew</button>
+        </div>
+      </article>
+
+      <h3 class="section-title">Choose brewer</h3>
+      <div id="methodGrid" class="grid"></div>
+    </section>
+
+    <section id="recipe" class="screen">
+      <button class="back" id="backHome">← Brewers</button>
+      <article class="recipe-card">
+        <p class="eyebrow" id="recipeType">Recipe ready</p>
+        <h2 id="methodName">V60</h2>
+        <div class="stats">
+          <div><span id="coffeeDose">20.6g</span><small>Coffee</small></div>
+          <div><span id="waterDose">340g</span><small>Water</small></div>
+          <div><span id="ratio">1:16.5</span><small>Ratio</small></div>
+        </div>
+      </article>
+
+      <article class="grind-card">
+        <p class="eyebrow">Fellow Opus</p>
+        <h2>Main Dial</h2>
+        <div class="grind-value" id="grindValue">5.50</div>
+        <div class="dial-wrap">
+          <div class="dial-track"><div id="dialDot" class="dial-dot"></div></div>
+          <div class="dial-labels"><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span></div>
+        </div>
+        <div class="quarter" id="quarterTicks"></div>
+        <div class="micro-row"><span>Micro</span><strong id="microValue">0 (Centre)</strong></div>
+        <p class="grind-note" id="grindLabel">Medium fine</p>
+      </article>
+
+      <article class="details-card">
+        <div><span>Target</span><strong id="targetTime">2:45–3:15</strong></div>
+        <div><span>Temp</span><strong id="temp">93°C</strong></div>
+        <div><span>Bloom</span><strong id="bloom">60g · 45s</strong></div>
+      </article>
+
+      <button class="primary wide" id="startBrew">Start Guided Brew</button>
+    </section>
+
+    <section id="brew" class="screen brew-screen">
+      <button class="back" id="backRecipe">← Recipe</button>
+      <p class="eyebrow" id="brewMethod">V60</p>
+      <h2 id="stepTitle">Bloom</h2>
+      <div class="step-main" id="stepMain">60g</div>
+      <p class="step-sub" id="stepSub">45 seconds</p>
+      <div class="progress"><div id="progressBar"></div></div>
+      <div class="brew-actions">
+        <button class="ghost" id="prevStep">Back</button>
+        <button class="primary" id="nextStep">Next</button>
+      </div>
+    </section>
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>
